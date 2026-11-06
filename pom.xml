@@ -229,7 +229,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.1</version>
                 <configuration>
                     <argLine>@{argLine} -Dnet.bytebuddy.experimental=true</argLine>
                     <systemPropertyVariables>
@@ -249,7 +249,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.15</version>
+                <version>0.8.16</version>
                 <executions>
                     <execution>
                         <id>jacoco-prepare-agent</id>
@@ -443,7 +443,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.15</version>
+                        <version>0.8.16</version>
                         <executions>
                             <execution>
                                 <id>jacoco-check</id>
@@ -521,6 +521,10 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
+                            <systemPropertyVariables>
+                                <!-- Maven relocates Ghidra module jars outside their installation paths. -->
+                                <class.searcher.search.all.jars>true</class.searcher.search.all.jars>
+                            </systemPropertyVariables>
                             <additionalClasspathElements>
                                 <!-- Framework/Generic/lib -->
                                 <!-- log4j: DefaultLanguageService.<clinit> -> LogManager. -->
@@ -539,6 +543,8 @@
                                 <!-- commons-io: real-program test setup on Ghidra 12.2 -> FilenameUtils. -->
                                 <element>${ghidra.generic.lib}/commons-io-2.19.0.jar</element>
                                 <element>${ghidra.generic.lib}/commons-collections4-4.6.0.jar</element>
+                                <!-- ClassSearcher discovers builtin types before native decompilation. -->
+                                <element>${ghidra.generic.lib}/commons-io-2.19.0.jar</element>
 
                                 <!-- Framework/SoftwareModeling/lib -->
                                 <!-- antlr: SleighLanguageProvider parses the .sla grammar. -->

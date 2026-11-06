@@ -8,6 +8,34 @@ Complete version history for the Ghidra MCP Server project.
 
 Changes on `dev` after 7.0.0.
 
+### Fixed: imported global audit applicability (#643)
+
+- Include read-only symbol, memory-block and binding provenance in global audits.
+  Exclude only proven synthetic imported linkage placeholders from storage
+  completeness; real GOT cells, BSS and defined storage remain auditable.
+- Preserve imported identity names without forgiving their storage requirements.
+  Per-function audit summaries distinguish non-applicable addresses and blocking
+  issues while retaining soft findings in the issue histogram.
+
+### Fixed: `search_byte_patterns` applies the `mask` parameter (#627)
+
+The `mask` argument was accepted but never used, so a masked search quietly
+returned the exact matches instead. A supplied mask now applies per byte — `00`,
+`??` or `..` leaves the byte free, and any other hex value compares exactly the
+bits it sets — replacing the pattern's inline wildcards. A mask of the wrong
+length, or a mask byte that is not a hex pair, returns an error instead of being
+ignored.
+
+### Fixed — `get_comment` advertised readback contract (#638)
+
+- The `get_comment` tool description, response-contract doc, endpoint catalog,
+  schema snapshot and assertion-corpus comment claimed `null` for a never-set
+  comment kind and `""` for one explicitly cleared. Clearing through
+  `set_comment` removes the comment record, so a cleared kind reads back as
+  `null` too; `""` can still appear only for a legacy record whose stored
+  text is empty. The advertised contract now matches the readback callers
+  actually observe.
+
 ### Fixed — facade mode compatibility (#527)
 
 - Keep the full tool surface as the default; register the five facade tools only
